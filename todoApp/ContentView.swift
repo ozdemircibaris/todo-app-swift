@@ -11,8 +11,7 @@ struct ContentView: View {
     var body: some View {
         VStack {
             TodoListScreen()
-        }
-        .padding()
+        }.background(Color.black)
     }
 }
 
