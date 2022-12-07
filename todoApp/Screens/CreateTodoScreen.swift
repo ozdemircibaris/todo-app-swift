@@ -8,8 +8,13 @@
 import SwiftUI
 
 struct CreateTodoScreen: View {
+    @EnvironmentObject var createTodoVM: CreateTodoViewModel
+    @EnvironmentObject var todoListVM: TodoListViewModel
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        VStack {
+            TextField("title")
+        }
     }
 }
 
