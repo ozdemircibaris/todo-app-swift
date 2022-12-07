@@ -38,6 +38,7 @@ struct TodoListView: View {
                         }.frame(width: 20, height: 20)
                     }.foregroundColor(Color.white)
                         .buttonStyle(PlainButtonStyle())
+
                     // title
                     VStack {
                         TextField("Type title", text: $todo.title)
@@ -48,15 +49,21 @@ struct TodoListView: View {
                             .padding(.horizontal, 30)
                             .background(Color.gray)
                     }
-
-                    Menu("") {
-                        Button("Delete") {
-                            deleteTodo(todoId: todo.id)
-                        }
-                        Button("Duplicate", action: {
-                            duplicateTodo(todoId: todo.id)
-                        })
-                    }.frame(width: 100)
+                    VStack(alignment: .center) {
+                        Menu {
+                            Button("Delete") {
+                                deleteTodo(todoId: todo.id)
+                            }
+                            Button("Duplicate", action: {
+                                duplicateTodo(todoId: todo.id)
+                            })
+                        } label: {
+                            Image(systemName: "bookmark.circle")
+                                .resizable()
+                                .frame(width:24.0, height: 24.0)
+                        }.frame(width: 30, alignment: .center)
+                            .menuIndicator(.hidden)
+                    }
                 }
             }
         }
