@@ -31,4 +31,8 @@ class TodoListViewModel: ObservableObject {
             
         }
     }
+    
+    func moveTodo(source: IndexSet, destionation: Int) {
+        todoList.move(fromOffsets: source, toOffset: destionation)
+    }
 }
