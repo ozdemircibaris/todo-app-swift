@@ -9,6 +9,7 @@ import SwiftUI
 
 struct TodoListView: View {
     @EnvironmentObject var todoListVM: TodoListViewModel
+    @State var isHover: Bool = false
 
     func deleteTodo(todoId: String) {
         todoListVM.deleteTodo(todoId: todoId)
@@ -27,7 +28,10 @@ struct TodoListView: View {
             List {
                 ForEach($todoListVM.todoList) { $todo in
                     HStack {
-                        Image(systemName: "square.grid.3x3.fill")
+                        Image(systemName: "line.3.horizontal")
+                            .onHover { hover in
+                                isHover = hover
+                            }
                         // completed
                         Button(action:
                                 {
@@ -54,7 +58,7 @@ struct TodoListView: View {
                                 .frame(height: 1)
                                 .padding(.horizontal, 30)
                                 .background(Color.gray)
-                        }.moveDisabled(true)
+                        }
                         
                         // action button
                         Menu {
@@ -73,6 +77,7 @@ struct TodoListView: View {
                             .moveDisabled(true)
                     }
                 }.onMove(perform: onMove)
+                    .moveDisabled(!isHover)
             }
         }
     }
