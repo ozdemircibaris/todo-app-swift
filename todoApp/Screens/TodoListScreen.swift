@@ -15,6 +15,7 @@ struct TodoListScreen: View {
             Button("Create todo") {
                 todoListVM.createTodo(createTodoRequest: CreateTodoRequest(title: "", completed: false))
             }
+
             TodoListView()
 
             Spacer()

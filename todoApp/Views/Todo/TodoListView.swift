@@ -55,7 +55,7 @@ struct TodoListView: View {
                                 .padding(.horizontal, 30)
                                 .background(Color.gray)
                         }.moveDisabled(true)
-
+                        
                         // action button
                         Menu {
                             Button("Delete") {
