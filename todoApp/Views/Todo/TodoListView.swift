@@ -7,10 +7,18 @@
 
 import SwiftUI
 
+enum FocusField: Hashable {
+    case none
+    case row(index: Int)
+}
+
 struct TodoListView: View {
     @EnvironmentObject var todoListVM: TodoListViewModel
     @State var isHover: Bool = false
-
+    @FocusState private var focusedField: FocusField?
+    @State var focusedIndex: Int = 0
+    
+    
     func deleteTodo(todoId: String) {
         todoListVM.deleteTodo(todoId: todoId)
     }
@@ -22,11 +30,26 @@ struct TodoListView: View {
     func onMove(from source: IndexSet, to destination: Int) {
         todoListVM.moveTodo(source: source, destionation: destination)
     }
-
+    
+    func handleNextTextField(todoIndex: Int) {
+        // get the current index
+        // current index + 1 and check the next item avability
+        // if next item avaible ? focused next item else add new item
+        let nextItemIndex = todoIndex + 1
+        if self.todoListVM.todoList.indices.contains(nextItemIndex) {
+            focusedField = .row(index: nextItemIndex)
+        } else {
+            todoListVM.createTodo(createTodoRequest: CreateTodoRequest(title: "", completed: false))
+            focusedField = .row(index: nextItemIndex)
+        }
+    }
+    
     var body: some View {
         VStack {
             List {
-                ForEach($todoListVM.todoList) { $todo in
+                ForEach(todoListVM.todoList.indices, id: \.self) { index in
+                    let todo = todoListVM.todoList[index];
+
                     HStack {
                         Image(systemName: "line.3.horizontal")
                             .onHover { hover in
@@ -51,8 +74,12 @@ struct TodoListView: View {
                         
                         // title
                         VStack {
-                            TextField("Type title", text: $todo.title)
+                            TextField("Type title", text: self.$todoListVM.todoList[index].title)
                                 .textFieldStyle(PlainTextFieldStyle())
+                                .focused($focusedField, equals: .row(index: index))
+                                .onSubmit {
+                                    handleNextTextField(todoIndex: index)
+                                }
                             
                             Divider()
                                 .frame(height: 1)
@@ -76,6 +103,7 @@ struct TodoListView: View {
                             .menuIndicator(.hidden)
                             .moveDisabled(true)
                     }
+                    
                 }.onMove(perform: onMove)
                     .moveDisabled(!isHover)
             }
