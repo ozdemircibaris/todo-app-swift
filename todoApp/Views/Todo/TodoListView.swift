@@ -23,6 +23,18 @@ extension NSTableView {
     }
 }
 
+extension Binding {
+    func onChange(_ handler: @escaping (Value) -> Void) -> Binding<Value> {
+        Binding(
+            get: { self.wrappedValue },
+            set: { newValue in
+                self.wrappedValue = newValue
+                handler(newValue)
+            }
+        )
+    }
+}
+
 struct TodoListView: View {
     @FocusState private var focusedField: FocusField?
     @EnvironmentObject var todoListVM: TodoListViewModel
@@ -89,7 +101,11 @@ struct TodoListView: View {
                             
                             // title
                             VStack {
-                                TextField("Type title", text: self.$todoListVM.todoList[index].title)
+                                TextField("Type title", text: self.$todoListVM.todoList[index].title.onChange({ value in
+                                    if self.todoDetail?.id == self.todoListVM.todoList[index].id {
+                                        todoDetail?.title = value
+                                    }
+                                }))
                                     .textFieldStyle(PlainTextFieldStyle())
                                     .focused($focusedField, equals: .row(index: index))
                                     .onSubmit {
